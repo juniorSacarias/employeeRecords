@@ -12,18 +12,18 @@ describe('Testing OneEmployee components', () => {
         jest.resetAllMocks();
     });
 
-    /*it('renders loading spinner while data is fetching', async () => {
+    it('renders loading spinner while data is fetching', async () => {
 		useQuery.mockReturnValueOnce({ isLoading: true });
-		render(<OneEmployee id={41} />);
+		render(<OneEmployee id={51} />);
 		const loadingSpinner = await screen.getByTestId('loading-spinner');
 
-		expect(loadingSpinner).toBeInTheDocument();
-	});*/
+		expect(loadingSpinner).toBeInTheDocument;
+	});
 
-	it('renders error message when there is an error fetching data', () => {
+	it('renders error message when there is an error fetching data', async () => {
 		useQuery.mockReturnValueOnce({ isLoading: false, isError: true });
-		render(<OneEmployee />);
-		const error = screen.getByText('Error');
+		render(<OneEmployee id={51}/>);
+		const error = await screen.getByText('Error');
 
 		expect(error).toBeInTheDocument();
 	});

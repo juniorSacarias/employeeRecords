@@ -8,6 +8,7 @@ import { useQuery } from 'react-query';
 import { CircularProgress } from '@mui/material';
 
 export default function OneEmployee({id}) {
+	console.log(id);
 	const { isLoading, isError, data, error } = useQuery({
 		queryFn: async () => await GetOneEmployee(id),
 		queryKey: 'employee'
