@@ -1,25 +1,21 @@
 'use client';
 
-import { GetOneEmployee } from '@/app/Employee/[id]/page';
 import Styles from '@/styles/Components/Employee/IdEmployee/IdEmployee.module.css';
 
 import Button from '@mui/material/Button';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardActions from '@mui/material/CardActions';
-import { CircularProgress } from '@mui/material';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { useMutation, useQueryClient, useQuery } from 'react-query';
+import { useMutation, useQueryClient } from 'react-query';
 import Typography from '@mui/material/Typography';
 
-export default function IdEmployee({ idEmployee }) {
-	const queryClient = useQueryClient();
+export default function IdEmployee({ employee }) {
 
-	const { isLoading, isError, data, error } = useQuery({
-		queryFn: async () => await GetOneEmployee(idEmployee),
-		queryKey: 'employee'
-	});
+	const queryClient = useQueryClient();	
+
+	const employeeData = employee.data;
 
 	const { push } = useRouter();
 
@@ -52,12 +48,7 @@ export default function IdEmployee({ idEmployee }) {
 		} catch (error) {
 			console.error(error);
 		}
-	};
-
-	if (isLoading) return <CircularProgress data-testid="loading-spinner" className={Styles.CircularProgress} />;
-	if (isError) return <h1>Error</h1>;
-
-	const employeeData = data.data;
+	}
 
 	return (
 		<>

@@ -25,7 +25,7 @@ describe('GetOneEmployees', () => {
 		});
 
 		// Llama a la función GetAllEmployees
-		const result = await GetOneEmployee(40);
+		const result = await GetOneEmployee(mockResponse.data[0].id);
 
 		// Verifica que los datos se hayan obtenido correctamente
 		expect(result).toEqual(mockResponse);

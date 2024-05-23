@@ -1,4 +1,5 @@
 import IdEmployee from '@/components/Employee/IdEmployee/IdEmployee';
+import OneEmployee from '@/components/Employee/IdEmployee/OneEmployee';
 import Styles from '@/styles/MainPage/page.module.css'
 
 // Function for take only the user in reference of the id, export for can use it in other page
@@ -17,7 +18,7 @@ export default function Page({ params }) {
 	return (
 		<>
 			<div className={Styles.main}>
-				<IdEmployee idEmployee={params.id} />
+				<OneEmployee id={params.id} />
 			</div>
 		</>
 	);
