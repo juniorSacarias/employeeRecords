@@ -11,7 +11,7 @@ import { useMutation, useQuery } from 'react-query';
 export default function FormEditEmployee({ idEmployee }) {
 	// method push for navigate and force change the page when the update is complete
 
-	const { push } = useRouter();
+	const router = useRouter();
 
 	// For get the information about one employee with id i`m use useQuery *
 
@@ -62,26 +62,21 @@ export default function FormEditEmployee({ idEmployee }) {
 
 	// Configuracion about update with reactQuery, need first create a method using in this case fetch for update *
 
-	const updateEmployee = async ({ updateEmployee, id }) => {
+	const { mutate } = useMutation(async ({ updateEmployee, id }) => {
 		try {
 			const options = {
 				method: 'PUT',
 				body: JSON.stringify(updateEmployee)
 			};
 			const response = await fetch(`http://localhost:3000/api/employees/${id}`, options);
-			if (response.ok) {
-				const data = await response.json();
-				return data;
+			if (!response.ok) {
+				throw new Error('Error updating employee');
 			}
-			throw new Error('Error updating employee');
+			return response.json();
 		} catch (error) {
 			throw new Error('Error updating employee: ' + error.message);
 		}
-	};
-
-	// Use Mutate and pass the argument updateEmployee for generate the change *
-
-	const { mutate } = useMutation(updateEmployee);
+	});
 
 	// Set the information of the form with setEmployee
 
@@ -112,9 +107,9 @@ export default function FormEditEmployee({ idEmployee }) {
 				alert('The age is less than 18 years old or is not assigned');
 				return;
 			}
-			const result = await mutate({ updateEmployee, id });
+			mutate(updateEmployee);
 			alert('Employee updated successfully');
-			push(`/Employee/${idEmployee}`);
+			router.push(`/Employee/${idEmployee}`);
 		} catch (error) {
 			throw new Error('Error with the update' + error.message);
 		}
@@ -122,10 +117,6 @@ export default function FormEditEmployee({ idEmployee }) {
 
 	if (isLoading) return <CircularProgress className={Styles.CircularProgress} />;
 	if (isError) return <h1>Error</h1>;
-
-	// const for use in placeholder in form
-
-	const employeeDataPlaceHolder = data.data[0];
 
 	return (
 		<>
@@ -139,7 +130,8 @@ export default function FormEditEmployee({ idEmployee }) {
 						type="text"
 						name="firstName"
 						className={Styles.input}
-						onChange={handleChange}/>
+						onChange={handleChange}
+					/>
 					<label htmlFor="LastName" className={Styles.label}>
 						LastName
 					</label>

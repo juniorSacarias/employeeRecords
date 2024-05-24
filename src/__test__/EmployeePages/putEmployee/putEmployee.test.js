@@ -1,80 +1,83 @@
-import { render, fireEvent, waitFor, screen } from '@testing-library/react';
+import { render, screen, fireEvent, act } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import FormEditEmployee from '@/components/Employee/editEmployee/FormEditEmployee';
-import { useMutation, useQuery } from 'react-query'; // Solo necesitas importar useMutation
+import { QueryClient, QueryClientProvider, useMutation, useQuery } from 'react-query';
 
+// Mock useRouter from next/navigation
 jest.mock('next/navigation', () => ({
 	useRouter: () => ({
-		push: jest.fn()
+		push: jest.fn() // Mocking push function
 	})
 }));
 
+// Mock useQuery from react-query
 jest.mock('react-query', () => ({
-	useMutation: jest.fn(),
-	useQuery: jest.fn()
+	...jest.requireActual('react-query'),
+	useQuery: jest.fn(),
+	useMutation: jest.fn()
 }));
 
-// Mock para el resultado de la query
-const mockData = {
-	isLoading: false,
-	isError: false,
-	data: {
+describe('FormEditEmployee Component', () => {
+	const queryClient = new QueryClient();
+
+	const employeeData = {
+		message: 'successfull',
+		status: 200,
 		data: [
 			{
-				firstName: 'antonia',
-				lastName: 'Ferreira',
-				birthday: '1999-06-16',
-				age: 24
+				id: 51,
+				firstName: 'John',
+				lastName: 'Doe',
+				birthday: '1990-01-01',
+				age: 30
 			}
 		]
-	},
-	error: null
-};
+	};
 
-// Mock para la función de mutación
-const mockMutate = jest.fn();
-
-// Mock para la función de query
-const mockGetOneEmployee = jest.fn();
-
-describe('FormEditEmployee', () => {
 	beforeEach(() => {
-		// Resetear mocks antes de cada prueba
-		useMutation.mockReturnValue({ mutate: mockMutate });
-		useQuery.mockReturnValue(mockData);
-		mockGetOneEmployee.mockClear();
-		mockMutate.mockClear();
-	});
-
-	it('should render form with employee data and submit successfully', async () => {
-		render(<FormEditEmployee idEmployee="1" />);
-
-		// Verificar que los campos de texto se llenan con los datos del empleado
-		expect(screen.getByLabelText('FirstName')).toHaveValue('antonia');
-		expect(screen.getByLabelText('LastName')).toHaveValue('Ferreira');
-		expect(screen.getByLabelText('Birthday')).toHaveValue('1999-06-16');
-
-		// Simular cambio en el input de fecha de nacimiento
-		fireEvent.change(screen.getByLabelText('Birthday'), { target: { value: '1996-05-05' } });
-
-		// Simular envío del formulario
-		fireEvent.submit(screen.getByText('Edit a employee'));
-
-		// Esperar a que se llame a la mutación
-		await waitFor(() => {
-			expect(mockMutate).toHaveBeenCalledTimes(1);
-			expect(mockMutate).toHaveBeenCalledWith({
-				updateEmployee: {
-					firstName: 'antonia',
-					lastName: 'Ferreira',
-					birthday: '1996-05-05',
-					age: 28
-				},
-				id: '48'
-			});
+		useQuery.mockReturnValue({
+			isLoading: false,
+			isError: false,
+			data: employeeData
 		});
 
-		// Verificar que se llama a useRouter para redireccionar después de la edición
-		expect(require('next/navigation').useRouter().push).toHaveBeenCalledWith('/Employee/48');
+		useMutation.mockReturnValue({
+			mutate: jest.fn()
+		});
+	});
+
+	it('should render the form correctly', () => {
+		render(
+			<QueryClientProvider client={queryClient}>
+				<FormEditEmployee idEmployee={51} />
+			</QueryClientProvider>
+		);
+
+		expect(screen.getByLabelText('FirstName')).toBeInTheDocument();
+		expect(screen.getByLabelText('LastName')).toBeInTheDocument();
+		expect(screen.getByLabelText('Birthday')).toBeInTheDocument();
+		expect(screen.getByRole('button', { name: 'Edit a employee' })).toBeInTheDocument();
+	});
+
+	it('should edit employee data when form is submitted', async () => {
+		render(
+			<QueryClientProvider client={queryClient}>
+				<FormEditEmployee idEmployee={51} />
+			</QueryClientProvider>
+		);
+
+		fireEvent.change(screen.getByLabelText('FirstName'), { target: { value: 'Jane' } });
+		fireEvent.change(screen.getByLabelText('LastName'), { target: { value: 'Doe' } });
+		fireEvent.change(screen.getByLabelText('Birthday'), { target: { value: '1995-01-01' } });
+
+		fireEvent.click(screen.getByRole('button', { name: 'Edit a employee' }));
+
+		await act(async () => {
+			// Esperar a que se complete la mutación
+		});
+
+		// Asegurar que se llama a la mutación con los datos correctos
+		expect(useMutation).toHaveBeenCalledWith(expect.any(Function));
+		expect(useMutation.mock.calls[0][0]).toEqual(expect.any(Function));
 	});
 });

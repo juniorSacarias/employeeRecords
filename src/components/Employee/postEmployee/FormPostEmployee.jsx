@@ -54,8 +54,8 @@ export default function FormPostEmployee() {
 				throw new Error('Error creating employee');
 			}
 			return response.json();
-		} catch (isError) {
-			throw new Error('Error creating employee: ' + isError.message);
+		} catch (error) {
+			throw new Error('Error creating employee: ' + error.message);
 		}
 	})
 
