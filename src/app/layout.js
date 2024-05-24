@@ -8,13 +8,13 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
 	return (
-		<html lang="en">
-			<QueryProvider>
+		<QueryProvider>
+			<html lang="en">
 				<body>
 					<Navigation />
 					{children}
 				</body>
-			</QueryProvider>
-		</html>
+			</html>
+		</QueryProvider>
 	);
 }

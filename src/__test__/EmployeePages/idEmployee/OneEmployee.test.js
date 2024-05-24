@@ -14,7 +14,7 @@ describe('Testing OneEmployee components', () => {
 
     it('renders loading spinner while data is fetching', async () => {
 		useQuery.mockReturnValueOnce({ isLoading: true });
-		render(<OneEmployee id={51} />);
+		render(<OneEmployee id={100} />);
 		const loadingSpinner = await screen.getByTestId('loading-spinner');
 
 		expect(loadingSpinner).toBeInTheDocument;

@@ -8,9 +8,10 @@ import { useQuery } from 'react-query';
 import { CircularProgress } from '@mui/material';
 
 export default function OneEmployee({id}) {
+	const idEmployee = id;
 	console.log(id);
 	const { isLoading, isError, data, error } = useQuery({
-		queryFn: async () => await GetOneEmployee(id),
+		queryFn: async () => await GetOneEmployee(idEmployee),
 		queryKey: 'employee'
 	});
 	if (isLoading) return <CircularProgress data-testid='loading-spinner' className={styles.progress}/>;

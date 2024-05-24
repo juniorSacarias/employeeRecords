@@ -1,4 +1,4 @@
-import { GetOneEmployee } from "@/app/Employee/[id]/page";
+import { GetOneEmployee } from '@/app/Employee/[id]/page';
 
 describe('GetOneEmployees', () => {
 	it('debería obtener datos de la API correctamente', async () => {
@@ -8,14 +8,14 @@ describe('GetOneEmployees', () => {
 			status: 200,
 			data: [
 				{
-					id: 40,
-					firstName: '',
-					lastName: '',
-					birthday: '1990-01-01',
-					age: 30,
-					createdAt: '2024-05-22T14:57:27.000Z',
-					updatedAt: '2024-05-22T14:57:27.000Z'
-				},
+					id: 48,
+					firstName: 'antonia',
+					lastName: 'Ferreira',
+					birthday: '1999-06-16',
+					age: 24,
+					createdAt: '2024-05-22T15:02:08.000Z',
+					updatedAt: '2024-05-23T12:52:45.000Z'
+				}
 			]
 		};
 
