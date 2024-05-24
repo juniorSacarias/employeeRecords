@@ -7,13 +7,11 @@ import CardContent from '@mui/material/CardContent';
 import CardActions from '@mui/material/CardActions';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { useMutation, useQueryClient, useQuery } from 'react-query'; 
+import { useMutation, useQueryClient, useQuery } from 'react-query';
 import Typography from '@mui/material/Typography';
 
 export default function IdEmployee({ employee }) {
-	const queryClient = useQuery(); 
-
-	console.log(employee);
+	const queryClient = useQuery();
 
 	const employeeData = employee.data;
 
@@ -21,31 +19,28 @@ export default function IdEmployee({ employee }) {
 
 	const { push } = useRouter();
 
-	const deleteEmployee = async idEmployee => {
+	const { mutate, isLoading, isError, error } = useMutation(async (idEmployee) => {
 		try {
 			const options = {
 				method: 'DELETE'
 			};
 			const response = await fetch(`http://localhost:3000/api/employees/${idEmployee}`, options);
-			if (response.ok) {
-				const data = await response.json();
-				return data;
+			if (!response.ok) {
+				throw new Error('Error deleting employee');
 			}
-			throw new Error('Error deleting employee');
+			return response.json();
 		} catch (error) {
-			throw new Error('Error deleting employee: ' + error.message);
-		}
-	};
-
-	const deleteEmployeMutation = useMutation(deleteEmployee, {
-		onSuccess: () => {
-			queryClient.invalidateQueries('employees');
+			throw new Error('Error deleating employee' + error.message);
 		}
 	});
 
-	const handleDelete = idEmployee => {
-		deleteEmployeMutation.mutate(idEmployee);
-		push('/');
+	const handleDelete = async (idEmployee) => {
+		try {
+			mutate(idEmployee)
+			push('/');
+		} catch (error) {
+			throw new Error('Error with the delete' + error.message);
+		}
 	};
 	return (
 		<div className={Styles.container} data-testid="employee-card">
@@ -54,7 +49,7 @@ export default function IdEmployee({ employee }) {
 					<Card key={idEmployee.id} data-testid="employee-card" className={Styles.Card}>
 						<CardContent className={Styles.CardContent}>
 							<Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
-								First Name
+								First Name	console.log(employee);
 							</Typography>
 							<Typography variant="h5" component="div">
 								{idEmployee.firstName}
