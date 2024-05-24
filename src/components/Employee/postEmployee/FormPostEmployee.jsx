@@ -43,24 +43,21 @@ export default function FormPostEmployee() {
 		return age;
 	};
 
-	const createEmployee = async employeeData => {
+	const { mutate, isLoading, isError, error } = useMutation(async (employee) => {
 		try {
 			const options = {
 				method: 'POST',
-				body: JSON.stringify(employeeData)
-			};
+				body: JSON.stringify(employee)
+			}; 
 			const response = await fetch('http://localhost:3000/api/employees', options);
-			if (response.ok) {
-				const data = await response.json();
-				return data;
+			if (!response.ok) {
+				throw new Error('Error creating employee');
 			}
-			throw new Error('Error creating employee');
-		} catch (error) {
-			throw new Error('Error creating employee: ' + error.message);
+			return response.json();
+		} catch (isError) {
+			throw new Error('Error creating employee: ' + isError.message);
 		}
-	};
-
-	const { mutate } = useMutation(createEmployee);
+	})
 
 	const handleChange = async e => {
 		setEmployee({
@@ -71,18 +68,18 @@ export default function FormPostEmployee() {
 
 	const handleSubmit = async e => {
 		e.preventDefault();
-		const employeeData = employee;
-		console.log(employeeData);
+		const createEmployee = employee;
+		console.log(createEmployee);
 		try {
-			if (!employeeData.firstName || !employeeData.lastName || !employeeData.birthday || employeeData.age === 0) {
+			if (!createEmployee.firstName || !createEmployee.lastName || !createEmployee.birthday || createEmployee.age === 0) {
 				alert('does not meet the requirements to be edited');
 				return;
 			}
-			if (employeeData.age < 18 || employeeData.age == null) {
+			if (createEmployee.age < 18 || createEmployee.age == null) {
 				alert('The age is less than 18 years old or is not assigned');
 				return;
 			}
-			mutate(employeeData);
+			mutate(createEmployee);
 			alert('Employee created successfully');
 			router.push('/');
 		} catch (error) {

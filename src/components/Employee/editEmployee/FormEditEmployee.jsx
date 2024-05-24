@@ -131,24 +131,23 @@ export default function FormEditEmployee({ idEmployee }) {
 		<>
 			<div className={Styles.container}>
 				<form action="POST" className={Styles.form} onSubmit={handleSubmit}>
-					<label className={Styles.label}>FirstName</label>
+					<label htmlFor="FirstName" className={Styles.label}>
+						FirstName
+					</label>
 					<input
+						id="FirstName"
 						type="text"
 						name="firstName"
 						className={Styles.input}
-						onChange={handleChange}
-						placeholder={employeeDataPlaceHolder.firstName}
-					/>
-					<label className={Styles.label}>LastName</label>
-					<input
-						type="text"
-						name="lastName"
-						className={Styles.input}
-						onChange={handleChange}
-						placeholder={employeeDataPlaceHolder.lastName}
-					/>
-					<label className={Styles.label}>Birthday</label>
-					<input type="date" name="birthday" className={Styles.input} onChange={handleChange} />
+						onChange={handleChange}/>
+					<label htmlFor="LastName" className={Styles.label}>
+						LastName
+					</label>
+					<input id="LastName" type="text" name="lastName" className={Styles.input} onChange={handleChange} />
+					<label htmlFor="Birthday" className={Styles.label}>
+						Birthday
+					</label>
+					<input id="Birthday" type="date" name="birthday" className={Styles.input} onChange={handleChange} />
 					<Button variant="contained" color="success" type="submit" className={Styles.button}>
 						Edit a employee
 					</Button>
