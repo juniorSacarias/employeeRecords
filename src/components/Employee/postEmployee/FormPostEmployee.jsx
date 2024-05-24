@@ -1,18 +1,13 @@
 'use client';
 
 import Styles from '@/styles/Components/Employee/FormsEmployee/FormsEmployee.module.css';
-
 import { Button } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { useMutation } from 'react-query';
 import { useRouter } from 'next/navigation';
 
 export default function FormPostEmployee() {
-	// method push for navigate and force change the page when the update is complete
-
-	let { push } = useRouter();
-
-	// useState, set the data about employee in the form
+	const router = useRouter();
 
 	const [employee, setEmployee] = useState({
 		firstName: '',
@@ -20,8 +15,6 @@ export default function FormPostEmployee() {
 		birthday: '',
 		age: 0
 	});
-
-	// When employee.birthday change executed the function calculateAge and set the new data of age
 
 	useEffect(() => {
 		if (employee.birthday) {
@@ -35,8 +28,6 @@ export default function FormPostEmployee() {
 		}
 	}, [employee.birthday]);
 
-	// Function calculateAge recibe one argumente a Date of birthday, and compare with today date and calculate the age
-
 	const calculateAge = birthday => {
 		const birthDate = new Date(birthday);
 		const today = new Date();
@@ -45,14 +36,12 @@ export default function FormPostEmployee() {
 		if (monthDifference < 0 || (monthDifference === 0 && today.getDate() < birthDate.getDate())) {
 			age--;
 		}
-		if (age >= 18) {
-			return age;
+		if (age < 18) {
+			return null;
 		}
-		alert('The age does not meet the requirements, it must be over 18 years old');
-		return null;
-	};
 
-	// Configuracion about posting with reactQuery, need first create a method using in this case fetch for post
+		return age;
+	};
 
 	const createEmployee = async employeeData => {
 		try {
@@ -71,11 +60,7 @@ export default function FormPostEmployee() {
 		}
 	};
 
-	// Use Mutate and pass the argument updateEmployee for generate the change *
-
 	const { mutate } = useMutation(createEmployee);
-
-	// Set the information of the form with setEmployee
 
 	const handleChange = async e => {
 		setEmployee({
@@ -84,23 +69,22 @@ export default function FormPostEmployee() {
 		});
 	};
 
-	// Use the employee data for launch the post handle function and push at "/" *
-
 	const handleSubmit = async e => {
 		e.preventDefault();
 		const employeeData = employee;
+		console.log(employeeData);
 		try {
-			if (!employeeData.firstName && !employeeData.lastName && !employeeData.birthday && !employeeData.age) {
+			if (!employeeData.firstName || !employeeData.lastName || !employeeData.birthday || employeeData.age === 0) {
 				alert('does not meet the requirements to be edited');
 				return;
 			}
-			if (employeeData.age <= 18 || employeeData.age == null) {
+			if (employeeData.age < 18 || employeeData.age == null) {
 				alert('The age is less than 18 years old or is not assigned');
 				return;
 			}
-			const result = await mutate(employeeData);
+			mutate(employeeData);
 			alert('Employee created successfully');
-			push('/');
+			router.push('/');
 		} catch (error) {
 			throw new Error('Error with the post' + error.message);
 		}
@@ -108,16 +92,29 @@ export default function FormPostEmployee() {
 
 	return (
 		<>
-			<div className={Styles.container}>
+			<div className={Styles.container} data-testid="formPost">
 				<form action="POST" id="formPost" className={Styles.form} onSubmit={handleSubmit}>
-					<label className={Styles.label}>FirstName</label>
-					<input type="text" name="firstName" className={Styles.input} onChange={handleChange} />
-					<label className={Styles.label}>LastName</label>
-					<input type="text" name="lastName" className={Styles.input} onChange={handleChange} />
-					<label className={Styles.label}>Birthday</label>
-					<input type="date" name="birthday" className={Styles.input} onChange={handleChange} />
-					<Button variant="contained" color="success" type="submit" className={Styles.button}>
-						Record a employee
+					<label htmlFor="firstName" className={Styles.label}>
+						firstName
+					</label>
+					<input
+						id="firstName"
+						type="text"
+						name="firstName"
+						className={Styles.input}
+						onChange={handleChange}
+					/>
+					<label htmlFor="lastName" className={Styles.label}>
+						lastName
+					</label>
+					<input id="lastName" type="text" name="lastName" className={Styles.input} onChange={handleChange} />
+					<label htmlFor="birthday" className={Styles.label}>
+						birthday
+					</label>
+					<input id="birthday" type="date" name="birthday" className={Styles.input} onChange={handleChange} />
+
+					<Button variant="contained" color="success" type="submit">
+						Record an employee
 					</Button>
 				</form>
 			</div>

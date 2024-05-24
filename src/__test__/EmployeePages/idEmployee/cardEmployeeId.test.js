@@ -82,5 +82,6 @@ describe('IdEmployee funcionality', () => {
 
 		render(<IdEmployee employee={data} />);
 		expect(screen.getAllByTestId('button-edit')).toBeInTheDocument;
+		expect(screen.getAllByTestId('button-delete')).toBeInTheDocument;
 	});
 });
