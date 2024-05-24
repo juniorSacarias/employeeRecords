@@ -7,11 +7,11 @@ import CardContent from '@mui/material/CardContent';
 import CardActions from '@mui/material/CardActions';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { useMutation, useQueryClient, useQuery } from 'react-query';
+import { useMutation, useQueryClient } from 'react-query';
 import Typography from '@mui/material/Typography';
 
 export default function IdEmployee({ employee }) {
-	const queryClient = useQuery();
+	const queryClient = useQueryClient(); 
 
 	const employeeData = employee.data;
 
@@ -49,7 +49,7 @@ export default function IdEmployee({ employee }) {
 					<Card key={idEmployee.id} data-testid="employee-card" className={Styles.Card}>
 						<CardContent className={Styles.CardContent}>
 							<Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
-								First Name	console.log(employee);
+								First Name
 							</Typography>
 							<Typography variant="h5" component="div">
 								{idEmployee.firstName}
