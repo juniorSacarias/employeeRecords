@@ -140,6 +140,7 @@ export default function FormEditEmployee({ idEmployee }) {
 						Birthday
 					</label>
 					<input id="Birthday" type="date" name="birthday" className={Styles.input} onChange={handleChange} />
+					<h5>The employee must be over 18 years old</h5>
 					<Button variant="contained" color="success" type="submit" className={Styles.button}>
 						Edit a employee
 					</Button>

@@ -28,14 +28,14 @@
 
 .input[type="date"]{
     padding: 10px;
-    margin-bottom: 15px;
+    margin-bottom: 5px;
     border: 1px solid #ccc;
     border-radius: 10px;
     height: 20px;
 }
 
 .button{
-    margin-top: 20px;
+    margin-top: 10px;
 }
 
 .CircularProgress{

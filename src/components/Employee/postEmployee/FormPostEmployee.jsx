@@ -109,7 +109,7 @@ export default function FormPostEmployee() {
 						birthday
 					</label>
 					<input id="birthday" type="date" name="birthday" className={Styles.input} onChange={handleChange} />
-
+					<h5>The employee must be over 18 years old</h5>
 					<Button variant="contained" color="success" type="submit">
 						Record an employee
 					</Button>
