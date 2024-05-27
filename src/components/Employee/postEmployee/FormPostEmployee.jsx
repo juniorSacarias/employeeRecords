@@ -37,6 +37,7 @@ export default function FormPostEmployee() {
 			age--;
 		}
 		if (age < 18) {
+			alert("The age is less than 18 years old or is not assigned")
 			return null;
 		}
 

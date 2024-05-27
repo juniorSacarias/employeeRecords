@@ -54,9 +54,9 @@ export default function FormEditEmployee({ idEmployee }) {
 			age--;
 		}
 		if (age >= 18) {
+			alert("The age is less than 18 years old or is not assigned")
 			return age;
 		}
-		alert('The age does not meet the requirements, it must be over 18 years old');
 		return null;
 	};
 
