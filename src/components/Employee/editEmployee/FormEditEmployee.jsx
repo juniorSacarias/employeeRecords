@@ -23,6 +23,7 @@ export default function FormEditEmployee({ idEmployee }) {
 	// useState, set the data about employee in the form
 
 	const [employee, setEmployee] = useState({
+		id: idEmployee,
 		firstName: '',
 		lastName: '',
 		birthday: '',
@@ -53,22 +54,22 @@ export default function FormEditEmployee({ idEmployee }) {
 		if (monthDifference < 0 || (monthDifference === 0 && today.getDate() < birthDate.getDate())) {
 			age--;
 		}
-		if (age >= 18) {
+		if (age <= 18) {
 			alert("The age is less than 18 years old or is not assigned")
-			return age;
+			return null;
 		}
-		return null;
+		return age;
 	};
 
 	// Configuracion about update with reactQuery, need first create a method using in this case fetch for update *
 
-	const { mutate } = useMutation(async ({ updateEmployee, id }) => {
+	const { mutate } = useMutation(async ( updateEmployee ) => {
 		try {
 			const options = {
 				method: 'PUT',
 				body: JSON.stringify(updateEmployee)
 			};
-			const response = await fetch(`http://localhost:3000/api/employees/${id}`, options);
+			const response = await fetch(`http://localhost:3000/api/employees/${updateEmployee.id}`, options);
 			if (!response.ok) {
 				throw new Error('Error updating employee');
 			}
@@ -92,7 +93,7 @@ export default function FormEditEmployee({ idEmployee }) {
 	const handleSubmit = async e => {
 		e.preventDefault();
 		const updateEmployee = employee;
-		const id = idEmployee;
+		console.log(updateEmployee);
 		try {
 			if (
 				!updateEmployee.firstName &&
@@ -103,13 +104,9 @@ export default function FormEditEmployee({ idEmployee }) {
 				alert('does not meet the requirements to be edited');
 				return;
 			}
-			if (updateEmployee.age <= 18 || updateEmployee.age == null) {
-				alert('The age is less than 18 years old or is not assigned');
-				return;
-			}
 			mutate(updateEmployee);
 			alert('Employee updated successfully');
-			router.push(`/Employee/${idEmployee}`);
+			router.push(`/Employee/${updateEmployee.id}`);
 		} catch (error) {
 			throw new Error('Error with the update' + error.message);
 		}
